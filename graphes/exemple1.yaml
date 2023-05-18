@@ -1,0 +1,11 @@
+name : exemple1
+descr : Modelisation de l'exemple 1
+type : uwgraph 
+nodes : [a, b, c, x, y, z]
+wedges :
+  a: {x: 40, y: 50, z: 40}
+  b: {x: 40, y: 90, z: 50}
+  c: {x: 50, y: 30, z: 50}
+  x: {a: 40, b: 40, c: 50}
+  y: {a: 50, b: 90, c: 30}
+  z: {a: 40, b: 50, c: 50}
