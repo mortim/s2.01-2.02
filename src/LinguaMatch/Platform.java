@@ -32,16 +32,12 @@ public class Platform {
         this.teenagers.add(t);
     }
 
-    /**
-     * Filtre les données des adolescents en supprimant les adolescents ayant le plus d'incohérences
-     * @see Teenager#getNbMismatch()
-    */
     public void filterTeenagers() {
-        Teenager t;
+        Teenager next;
         Iterator<Teenager> it = this.teenagers.iterator();
         while(it.hasNext()) {
-            t = it.next();
-            if(t.getNbMismatch() == 1)
+            next = it.next();
+            if(next.hasInconsistencyCriterions())
                 it.remove();
         }
     }
