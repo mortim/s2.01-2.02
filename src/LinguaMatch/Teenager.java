@@ -1,10 +1,10 @@
 package LinguaMatch;
 
 import java.util.Map;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Décrit un adolescent participant à un séjour linguistique
@@ -13,7 +13,9 @@ import java.util.List;
 public class Teenager {
     private static int nauto = 0;
     private int id;
+    private String forename;
     private String name;
+    private LocalDate birthDate;
     private final Country country;
     private Map<String, Criterion> requirements;
 
@@ -22,9 +24,11 @@ public class Teenager {
      * @param name Nom de l'adolescent
      * @param country Pays d'origine
     */
-    public Teenager(String name, Country country) {
+    public Teenager(String forename, String name, LocalDate birthDate, Country country) {
         this.id = Teenager.nauto++;
+        this.forename = forename;
         this.name = name;
+        this.birthDate = birthDate;
         this.country = country;
         this.requirements = new HashMap<String, Criterion>();
     }
@@ -37,10 +41,24 @@ public class Teenager {
     }
 
     /**
+     * Retourne le prénom de l'adolescent
+    */
+    public String getForename() {
+        return this.forename;
+    }
+
+    /**
      * Retourne le nom de l'adolescent
     */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Retourne la date de naissance de l'adolescent
+    */
+    public LocalDate getBirthDate() {
+        return this.birthDate;
     }
 
     /**
@@ -80,105 +98,96 @@ public class Teenager {
      * @param criterion Le critère
      * @see getRequirements()
     */
-    public void addCriterion(String criterionName, Criterion criterion) {
-        if(CriterionName.isCriterionName(criterionName))
+    public boolean addCriterion(String criterionName, Criterion criterion) {
+        try {
+            // On vérifie que le paramètre criterionName contient l'une des valeurs de l'enum CriterionName
+            CriterionName.valueOf(criterionName);
             this.requirements.put(criterionName, criterion);
+            return true;
+        } catch(IllegalArgumentException e) {
+            return false;
+        }
     }
 
-    // Méthode utile pour vérifier qu'une liste contient au moins un élement d'un tableau
-    private boolean containsAny(List<String> list, String[] arr) {
-        for(int i = 0; i < arr.length; i++) {
-            if(list.contains(arr[i]))
+    /**
+     * Vérifie si un adolescent a des critères incohérents suivant ces 2 types d'incohérences:
+     * <ul>
+     *  <li>Un critère censé stocker un booléen mais de valeur effective d'un autre type est incohérent</li>
+     *  <li>Un adolescent déclarant une allergie aux animaux (contrainte rédhibitoire) mais déclarant aussi posséder un animal à la maison</li>
+     * </ul>
+    */
+    public boolean hasInconsistencyCriterions() {
+        Criterion hostCrit = this.requirements.get("HOST_HAS_ANIMAL");
+        Criterion guestCrit = this.requirements.get("GUEST_ANIMAL_ALLERGY");
+         
+        if(hostCrit != null && guestCrit != null) {
+            try {
+                hostCrit.isValid();
+                guestCrit.isValid();
+
+                if(hostCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
+                    return true;
+            } catch(WrongCriterionTypeException e) {
                 return true;
+            }
         }
         return false;
     }
 
     /**
-     * Retourne le nombre d'incohérences d'un adolescent
-     * <p>2 types d'incohérences sont prises en compte:</p>
-     * <ul>
-     *  <li>Un critère censé stocker un booléen mais de valeur effective d’un autre type</li>
-     *  <li>Un adolescent déclarant une allergie aux animaux (contrainte rédhibitoire) mais déclarant aussi posséder un animal à la maison</li>
-     * </ul>
-     * @see CriterionName#GUEST_ANIMAL_ALLERGY
-     * @see CriterionName#HOST_HAS_ANIMAL
-     * @see Platform#filterTeenagers
-     */
-    public int getNbMismatch() {
-        int nb = 0;
-        if(this.requirements != null) {
-            Criterion visitorCriterion = this.requirements.get("GUEST_ANIMAL_ALLERGY");
-            Criterion guestCriterion = this.requirements.get("HOST_HAS_ANIMAL");
+     * V1 de la méthode compatibleWithGuestGraphesV1
+     * @param guest L'adolescent visiteur
+     * @see compatibleWithGuest
+    */
+    public boolean compatibleWithGuestGraphesV1(Teenager guest) {
+        // ----------------------
+        // Contraine sur l'allergie
+        Criterion hostCrit = this.requirements.get("HOST_HAS_ANIMAL");
+        Criterion guestCrit = guest.requirements.get("GUEST_ANIMAL_ALLERGY");
 
-            if(!visitorCriterion.isValid())
-                nb++;
-            if(!guestCriterion.isValid())
-                nb++;
-            if(visitorCriterion.getValue().equals("yes") && guestCriterion.getValue().equals("yes"))
-                nb++;
-        }
-        return nb;
+        if(hostCrit != null && guestCrit != null)
+            if(hostCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
+                return false;
+
+        return true;
     }
 
     /**
      * Vérifie qu'un adolescent visiteur est compatible avec un adolescent hôte
-     * @param guest L'adolescent hôte
+     * @param guest L'adolescent visiteur
     */
     public boolean compatibleWithGuest(Teenager guest) {
-        if(this.requirements == null || guest.requirements == null)
-            return false;
-
         // ----------------------
-        // Contraine sur l'allergie
-        Criterion visitorCrit = this.requirements.get("GUEST_ANIMAL_ALLERGY");
-        Criterion guestCrit = guest.requirements.get("HOST_HAS_ANIMAL");
+        // Contrainte sur l'allergie
+        Criterion hostCrit = this.requirements.get("HOST_HAS_ANIMAL");
+        Criterion guestCrit = guest.requirements.get("GUEST_ANIMAL_ALLERGY");
 
-        // Si l'un des 2 est nul (mais pas les 2) (XOR operator)
-        if(visitorCrit == null ^ guestCrit == null)
-            return false;
-        // Si les 2 ne sont pas nuls (dans le cas contraires on regarde les autes contraintes)
-        else if(visitorCrit != null && guestCrit != null) {
-            if(visitorCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
+        // On ignore les critères qui n'existent pas chez l'un des 2 adolescents (ou les 2)
+        if(hostCrit != null && guestCrit != null)
+            if(hostCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
                 return false;
-        }
 
         // ----------------------
-        // Contraine sur le régime 
-        visitorCrit = this.requirements.get("GUEST_FOOD");
-        guestCrit = guest.requirements.get("HOST_FOOD");
+        // Contrainte sur le régime alimentaire
+        hostCrit = this.requirements.get("HOST_FOOD");
+        guestCrit = guest.requirements.get("GUEST_FOOD");
 
-        if(visitorCrit == null ^ guestCrit == null)
-            return false;
-        else if(visitorCrit != null && guestCrit != null) {
-            if(!Arrays.asList(guestCrit.getValue().split(",")).containsAll(Arrays.asList(visitorCrit.getValue().split(","))))
+        if(hostCrit != null && guestCrit != null)
+            if(!Arrays.asList(hostCrit.toArray()).containsAll(Arrays.asList(guestCrit.toArray())))
                 return false;
-        }
-
+        
         // ----------------------
-        // Contraine sur les passes-temps
-        visitorCrit = this.requirements.get("HOBBIES");
+        // Contrainte sur l'historique
+        // À implementer...
+        
+        // ----------------------
+        // Contrainte sur certains pays (ex: France)
+        hostCrit = this.requirements.get("HOBBIES");
         guestCrit = guest.requirements.get("HOBBIES");
 
-        if(visitorCrit == null ^ guestCrit == null)
-            return false;
-        else if(visitorCrit != null && guestCrit != null) {
-            // Vérifier si le visiteur contient au moins 1 critère requis par l'hôte français
-            if(guest.country == Country.FRANCE && !this.containsAny(Arrays.asList(visitorCrit.getValue().split(",")), guestCrit.getValue().split(",")))
+        if(hostCrit != null && guestCrit != null)
+            if((!AffectationUtil.containsAny(hostCrit.toArray(), guestCrit.toArray())) && (this.country == Country.FRANCE || guest.country == Country.FRANCE))
                 return false;
-        }
-
-        // ----------------------
-        // Contraine sur l'historique d'affectation
-        visitorCrit = this.requirements.get("HISTORY");
-        guestCrit = guest.requirements.get("HISTORY");
-
-        if(visitorCrit == null ^ guestCrit == null)
-            return false;
-        else if(visitorCrit != null && guestCrit != null) {
-            if(visitorCrit.getValue().equals("other") || guestCrit.getValue().equals("other"))
-                return false;
-        }
 
         return true;
     }
@@ -188,13 +197,16 @@ public class Teenager {
      * @see Criterion#isValid()
     */
     public void purgeInvalidRequirement() {
-        Map.Entry<String, Criterion> entry;
-        // Nous utilisons un iterateur pour nous simplifier la suppression d'éléments d'une structure de données en cours d'itération
+        Map.Entry<String, Criterion> next;
+        // Nous utilisons un itérateur pour nous simplifier la suppression d'éléments d'une structure de données en cours d'itération
         Iterator<Map.Entry<String, Criterion>> it = this.requirements.entrySet().iterator();
         while(it.hasNext()) {
-            entry = it.next();
-            if(!entry.getValue().isValid())
+            next = it.next();
+            try {
+                next.getValue().isValid();
+            } catch(WrongCriterionTypeException e) {
                 it.remove();
+            }
         }
     }
 
@@ -203,7 +215,7 @@ public class Teenager {
     */
     @Override
     public String toString() {
-        return this.name + "\n-----\n- Pays d'origine: " + this.country + "\n- Critères: " + this.requirements;
+        return this.forename + " " + this.name;
     }
     
 }
