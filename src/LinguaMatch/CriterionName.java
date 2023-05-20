@@ -36,15 +36,7 @@ public enum CriterionName {
 	/**
 	* Critère sur la possibilité de correspondre avec un même adolescent que les années précédentes
 	*/
-	HISTORY('T'),
-	/**
-	* Critère sur la différence d'âge entre adolescents
-	*/
-	AGE_GAP('N'),
-	/**
-	 * Critère de l'hôte/visiteur exprimant sa date de naissance
-	 */
-	BIRTH_DATE('D');
+	HISTORY('T');
 	
 	private final char TYPE;
 	
@@ -57,23 +49,31 @@ public enum CriterionName {
 	}
 
 	/**
-	 * Vérifier que le paramètre en chaîne de caractères est un nom de critère
-	 * @param crit Nom de critère
-	*/
-	public static boolean isCriterionName(String crit) {
-		try {
-			CriterionName.valueOf(crit);
-			return true;
-		} catch(IllegalArgumentException e) {
-			return false;
-		}
-	}
-	
-	/**
 	 * Retourne le type du nom de critère
 	 * @return char représentant le type du nom du critère
 	*/
 	public char getType() {
 		return this.TYPE;
+	}
+
+	/**
+	 * Retourne le nom complet du type du nom de critère suivant son type en char
+	 * @param type
+	 * @return le nom complet du type du critère
+	*/
+	public static String getFullNameType(char type) {
+		String out;
+		switch(type) {
+			case 'B':
+				out = "booléen";
+				break;
+			case 'T':
+				out = "texte";
+				break;
+			default:
+				out = "type inconnu";
+				break;
+		}
+		return out;
 	}
 }
