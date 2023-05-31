@@ -24,8 +24,10 @@ LinguaMatch est une application (avec et sans interface graphique) permettant d'
 
 Pour générer la documentation Javadoc en local
 
-> Le fichier 'src/LinguaMatch/package-info.java' sert à documenter le package LinguaMatch (à la racine de la documentation javadoc)
+> Le fichier 'package-info.java' présent dans l'arborescence sert à documenter chaque package du projet
 
 ```
-javadoc -d doc src/LinguaMatch/*.java -author
+javadoc -author -d doc -cp lib/sae2_02.jar:lib/jgrapht-core-1.5.1.jar -sourcepath src -subpackages LinguaMatch 
 ```
+
+La page principale se trouve dans ``doc/LinguaMatch/package-summary.html``
