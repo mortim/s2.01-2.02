@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import LinguaMatch.CriterionName;
+import LinguaMatch.core.CriterionName;
 
 public class CriterionNameTest {
     public CriterionName criterionName1, criterionName2, criterionName3, criterionName4;

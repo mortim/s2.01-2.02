@@ -9,7 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.time.LocalDate;
 import java.util.HashMap;
-import LinguaMatch.*;
+import LinguaMatch.core.Country;
+import LinguaMatch.core.Criterion;
+import LinguaMatch.core.CriterionName;
+import LinguaMatch.core.Teenager;
 
 public class TeenagerTest {
     Teenager t1, t2, t3;

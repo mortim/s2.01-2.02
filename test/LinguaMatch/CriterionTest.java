@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import LinguaMatch.Criterion;
-import LinguaMatch.CriterionName;
-import LinguaMatch.WrongCriterionTypeException;
+import LinguaMatch.core.Criterion;
+import LinguaMatch.core.CriterionName;
+import LinguaMatch.core.WrongCriterionTypeException;
 
 public class CriterionTest {
     public Criterion criterion, criterion2, criterion3, criterion4, criterion5, criterion6;
