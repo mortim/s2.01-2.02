@@ -26,7 +26,7 @@ public class Affectation implements Serializable {
     private List<Arete<Teenager>> affectations;
 
     /**
-     * Constructeur qui initialise un graphe biparti, et 2 listes stockants les sommets de gauche et de droite de ce graphe
+     * Constructeur qui initialise un graphe biparti, et 2 listes stockant les sommets de gauche et de droite de ce graphe
     */
     public Affectation() {
         this.grapheBiparti = new GrapheNonOrienteValue<>();
@@ -42,7 +42,21 @@ public class Affectation implements Serializable {
     }
 
     /**
-     * Retourne le résultats des affectations dans une liste
+     * Retourne la liste des sommets de gauche
+    */
+    public List<Teenager> getSommetsGauche() {
+        return this.sommetsGauche;
+    }
+
+    /**
+     * Retourne la liste des sommets de droite
+    */
+    public List<Teenager> getSommetsDroite() {
+        return this.sommetsDroite;
+    }
+
+    /**
+     * Retourne le résultat des affectations dans une liste
     */
     public List<Arete<Teenager>> getAffectations() {
         return this.affectations;

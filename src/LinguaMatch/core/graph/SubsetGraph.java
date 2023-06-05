@@ -12,5 +12,5 @@ public enum SubsetGraph {
     /**
      * Sous-ensemble de droite du graphe biparti
     */
-    DROITE
+    DROITE;
 }

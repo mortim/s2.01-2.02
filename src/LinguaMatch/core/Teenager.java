@@ -1,6 +1,7 @@
 package LinguaMatch.core;
 
 import LinguaMatch.core.graph.AffectationUtil;
+import fr.ulille.but.sae2_02.graphes.Arete;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -116,11 +118,11 @@ public class Teenager implements Serializable {
      * @param criterion Le critère
      * @see getRequirements()
     */
-    public boolean addCriterion(String criterionName, Criterion criterion) {
+    public boolean addCriterion(Criterion criterion) {
         try {
             // On vérifie que le paramètre criterionName contient l'une des valeurs de l'enum CriterionName
-            CriterionName.valueOf(criterionName);
-            this.requirements.put(criterionName, criterion);
+            CriterionName.valueOf(criterion.getLabel().name());
+            this.requirements.put(criterion.getLabel().name(), criterion);
             return true;
         } catch(IllegalArgumentException e) {
             return false;
@@ -134,47 +136,70 @@ public class Teenager implements Serializable {
      *  <li>Un adolescent déclarant une allergie aux animaux (contrainte rédhibitoire) mais déclarant aussi posséder un animal à la maison</li>
      * </ul>
     */
-    public boolean hasInconsistencyCriterions() {
+    public boolean hasInconsistencyCriterions() throws CriterionTypeException {
         Criterion hostCrit = this.requirements.get("HOST_HAS_ANIMAL");
         Criterion guestCrit = this.requirements.get("GUEST_ANIMAL_ALLERGY");
          
         if(hostCrit != null && guestCrit != null) {
-            try {
-                hostCrit.isValid();
-                guestCrit.isValid();
+            hostCrit.isValid();
+            guestCrit.isValid();
 
-                if(hostCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
-                    return true;
-            } catch(WrongCriterionTypeException e) {
-                return true;
-            }
+            if(hostCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
+                throw new CriterionTypeException("Un adolescent ne peut pas être allergène aux animaux et avoir un animal chez lui.");
         }
+
         return false;
     }
 
-    /**
-     * V1 de la méthode compatibleWithGuestGraphesV1
+     /**
+     * V2 de la méthode compatibleWithGuest en introduisant des critères supplémentaires et un un degré d'incompatibilité (on ne retourne plus un booléen mais un degré d'incompatiblité via des malus)
      * @param guest L'adolescent visiteur
      * @see compatibleWithGuest
     */
-    public boolean compatibleWithGuestGraphesV1(Teenager guest) {
+    public int calculateCompatibilityV2(Teenager guest, List<Arete<Teenager>> historiqueAffectations) {
+        int malusCompatibility = 0;
+
         // ----------------------
-        // Contraine sur l'allergie
+        // Contrainte sur l'allergie
         Criterion hostCrit = this.requirements.get("HOST_HAS_ANIMAL");
         Criterion guestCrit = guest.requirements.get("GUEST_ANIMAL_ALLERGY");
 
         if(hostCrit != null && guestCrit != null)
             if(hostCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
-                return false;
+                malusCompatibility += AffectationUtil.COMPATIBILITY_MALUS;
+        
+        // ----------------------
+        // Contrainte sur le régime alimentaire
+        hostCrit = this.requirements.get("HOST_FOOD");
+        guestCrit = guest.requirements.get("GUEST_FOOD");
 
-        return true;
+        if(hostCrit != null && guestCrit != null)
+            if(!Arrays.asList(hostCrit.toArray()).containsAll(Arrays.asList(guestCrit.toArray())))
+                malusCompatibility += AffectationUtil.calculate(hostCrit.toArray(), guestCrit.toArray(), AffectationUtil.COMPATIBILITY_MALUS);
+
+        // ----------------------
+        // Contrainte sur certains pays (ex: France)
+        hostCrit = this.requirements.get("HOBBIES");
+        guestCrit = guest.requirements.get("HOBBIES");
+
+        if(hostCrit != null && guestCrit != null)
+            if((!AffectationUtil.containsAny(hostCrit.toArray(), guestCrit.toArray())) && (this.country == Country.FRANCE || guest.country == Country.FRANCE))
+                malusCompatibility += AffectationUtil.COMPATIBILITY_MALUS;
+
+        // ----------------------
+        // Contrainte sur l'historique
+        malusCompatibility += AffectationUtil.calculateHistoryCriterion(this, guest, historiqueAffectations, AffectationUtil.CONSTRAINT_TYPE);
+
+        return malusCompatibility;
     }
 
     /**
-     * Vérifie qu'un adolescent visiteur est compatible avec un adolescent hôte
+     * (V1 Graphes) Vérifie qu'un adolescent visiteur est compatible avec un adolescent hôte
      * @param guest L'adolescent visiteur
     */
     public boolean compatibleWithGuest(Teenager guest) {
+        // Le critère HISTORY n'est pas implementé au sein de cette méthode
+
         // ----------------------
         // Contrainte sur l'allergie
         Criterion hostCrit = this.requirements.get("HOST_HAS_ANIMAL");
@@ -218,7 +243,7 @@ public class Teenager implements Serializable {
             next = it.next();
             try {
                 next.getValue().isValid();
-            } catch(WrongCriterionTypeException e) {
+            } catch(CriterionTypeException e) {
                 it.remove();
             }
         }
@@ -241,6 +266,24 @@ public class Teenager implements Serializable {
         oos.writeObject(this.birthDate);
         oos.writeObject(this.country);
         oos.writeObject(this.requirements);
+    }
+
+    /**
+     * Vérifie l'égalité entre 2 adolescents
+     * @param o Un objet
+     */
+    @Override
+    public boolean equals(Object o) {
+        if(o == null)
+            return false;
+        else if(o == this)
+            return true;
+        else if(this.getClass() == o.getClass()) {
+            Teenager t = (Teenager)o;
+            // FORENAME / NAME ne peuvent pas être nuls suivant la lecture du fichier CSV
+            return this.forename.equals(t.forename) && this.name.equals(t.name);
+        } else
+            return false;
     }
 
     /**
