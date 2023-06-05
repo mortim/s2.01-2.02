@@ -1,21 +1,7 @@
 package LinguaMatch.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import LinguaMatch.core.graph.Affectation;
-import LinguaMatch.core.graph.AffectationUtil;
-import LinguaMatch.core.graph.SubsetGraph;
-import LinguaMatch.csv.CSVReader;
-import LinguaMatch.csv.CSVWriter;
 
 /**
  * Représente la plateforme d'affectation de tous les adolescents
@@ -46,13 +32,21 @@ public class Platform {
         this.teenagers.add(t);
     }
 
+    /**
+     * Filtre les adolescents (en les supprimant) ayant des types/valeurs de critères incohérents (suivant les indications de la méthode hasInconsistencyCriterions)
+     * @see Teenager#hasInconsistencyCriterions()
+    */
     public void filterTeenagers() {
         Teenager next;
         Iterator<Teenager> it = this.teenagers.iterator();
         while(it.hasNext()) {
             next = it.next();
-            if(next.hasInconsistencyCriterions())
+            try {
+                next.hasInconsistencyCriterions();
+            } catch(CriterionTypeException e) {
+                System.out.println(e.getMessage());
                 it.remove();
+            }
         }
     }
 
@@ -64,52 +58,4 @@ public class Platform {
         for(Teenager t : this.teenagers)
             t.purgeInvalidRequirement();
     }
-
-    // public static void main(String[] args) {
-    //     try {
-    //         CSVReader csv = new CSVReader("/home/karim/Downloads/s2.01-s2.02/csv/adosAleatoiresAvecIncompatiblesFranceItalie.csv");
-    //         csv.load();
-
-    //         for(Teenager t : csv.getParsed()) {
-    //             System.out.println(t);
-    //         }
-
-    //         for(String errors : csv.getErrors()) {
-    //             System.out.print(errors);
-    //             System.out.println();
-    //         }
-
-    //         csv.close();
-            
-    //         // ------------------------
-    //         CSVWriter csv2 = new CSVWriter("/home/karim/Downloads/s2.01-s2.02/csv/file.csv", ";");
-            
-    //         Teenager adonia = new Teenager("Adonia", "A", LocalDate.of(2005,12,15), Country.FRANCE);
-    //         adonia.addCriterion("GUEST_ANIMAL_ALLERGY", new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "no"));
-    //         adonia.addCriterion("HOBBIES", new Criterion(CriterionName.HOBBIES, "sports,technology"));
-        
-    //         Teenager bellatrix = new Teenager("Bellatrix", "B", LocalDate.of(2005,12,15), Country.FRANCE);
-    //         bellatrix.addCriterion("GUEST_ANIMAL_ALLERGY", new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "yes"));
-    //         bellatrix.addCriterion("HOBBIES", new Criterion(CriterionName.HOBBIES, "culture,science"));
-
-    //         Affectation affectation = new Affectation();
-    //         affectation.ajouterAdolescent(adonia, SubsetGraph.GAUCHE);
-    //         affectation.ajouterAdolescent(bellatrix, SubsetGraph.DROITE);
-
-    //         affectation.ajouterCoupleHoteVisiteur(adonia, bellatrix, AffectationUtil.weight(adonia, bellatrix));
-
-    //         affectation.calculerAffectation();
-
-    //         csv2.write(affectation.getAffectations());
-
-    //         csv2.close();
-    //     } catch(FileNotFoundException e) {
-    //         System.out.println(e.getClass() + ": " + e.getMessage());
-    //     } catch(IllegalStateException e) {
-    //         System.out.println(e.getClass() + ": " + e.getMessage());
-    //     } catch(IOException e) {
-    //         System.out.println(e.getClass() + ": " + e.getMessage());
-    //     }
-    // }
-
 }

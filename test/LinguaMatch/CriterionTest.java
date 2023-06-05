@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import LinguaMatch.core.Criterion;
 import LinguaMatch.core.CriterionName;
-import LinguaMatch.core.WrongCriterionTypeException;
+import LinguaMatch.core.CriterionTypeException;
 
 public class CriterionTest {
     public Criterion criterion, criterion2, criterion3, criterion4, criterion5, criterion6;
@@ -30,7 +30,7 @@ public class CriterionTest {
 
     @Test
     void testIsValid() {
-        Exception e = assertThrows(WrongCriterionTypeException.class, () -> {
+        Exception e = assertThrows(CriterionTypeException.class, () -> {
             assertTrue(this.criterion.isValid());
             assertTrue(this.criterion3.isValid());
             this.criterion2.isValid();
