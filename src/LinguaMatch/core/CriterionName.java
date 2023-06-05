@@ -50,7 +50,7 @@ public enum CriterionName {
 
 	/**
 	 * Retourne le type du nom de critère
-	 * @return char représentant le type du nom du critère
+	 * @return Char représentant le type du nom du critère
 	*/
 	public char getType() {
 		return this.TYPE;
@@ -59,7 +59,7 @@ public enum CriterionName {
 	/**
 	 * Retourne le nom complet du type du nom de critère suivant son type en char
 	 * @param type
-	 * @return le nom complet du type du critère
+	 * @return Le nom complet du type du critère
 	*/
 	public static String getFullNameType(char type) {
 		String out;
