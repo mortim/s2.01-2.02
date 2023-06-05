@@ -63,7 +63,7 @@ public class TeenagerTest {
         mapTmp.put("GENDER", new Criterion(CriterionName.GENDER, "M"));
         teenagerTmp.setRequirements(mapTmp);
         
-        this.t1.addCriterion("GENDER", new Criterion(CriterionName.GENDER, "M"));
+        this.t1.addCriterion(new Criterion(CriterionName.GENDER, "M"));
 
         // La méthode equals est implementé au sein de la classe Criterion pour qu'il l'invoque et qu'il vérifie l'égalité des valeurs au sein de ces 2 tables associatives
         assertTrue(this.t1.getRequirements().equals(teenagerTmp.getRequirements()));

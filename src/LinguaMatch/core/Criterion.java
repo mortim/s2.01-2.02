@@ -11,7 +11,7 @@ import java.io.Serializable;
  * linguistique
  * 
  * @author WASSON Baptiste, LAGACHE Kylian, AOULAD-TAYAB Karim
- */
+*/
 public class Criterion implements Serializable {
     private CriterionName label;
     private String value;
@@ -22,17 +22,17 @@ public class Criterion implements Serializable {
      * 
      * @param value Valeur du critère
      * @param label Nom du critère issu (cf: CriterionName enum)
-     */
+    */
     public Criterion(CriterionName label, String value) {
         this.label = label;
-        this.value = value;
+        this.value = value == null ? "" : value;
     }
 
     /**
      * Getter pour l'attribut label de la classe Criterion
      * 
      * @return Le nom du critère (cf: CriterionName enum)
-     */
+    */
     public CriterionName getLabel() {
         return this.label;
     }
@@ -41,7 +41,7 @@ public class Criterion implements Serializable {
      * Getter pour l'attribut value de la classe Criterion
      * 
      * @return La valeur du critère
-     */
+    */
     public String getValue() {
         return this.value;
     }
@@ -50,9 +50,12 @@ public class Criterion implements Serializable {
      * Transforme la/les valeurs d'un critère en tableau
      * 
      * @return Le tableau de valeurs
-     */
+    */
     public String[] toArray() {
-        return this.value.split(",");
+        String[] values = this.value.split(",");
+        if(values.length == 1 && values[0].equals(""))
+            return new String[]{};
+        return values;
     }
 
     /**
@@ -60,7 +63,7 @@ public class Criterion implements Serializable {
      * exemple: "yes" représente la valeur true donc on renvoie 'B' (pour boléen)
      * 
      * @return char représentant le type "réel"
-     */
+    */
     public char infer() {
         if (this.value.equals("yes") || this.value.equals("no"))
             return 'B';
@@ -75,21 +78,20 @@ public class Criterion implements Serializable {
      * est de type booléen, on s'attend à un boléen representé par "yes" ou "no")
      * 
      * @see infer()
-     * @exception WrongCriterionTypeException Si le type actuel de la valeur ne correspond pas à celui attendu par le critère
+     * @exception CriterionTypeException Si le type actuel de la valeur ne correspond pas à celui attendu par le critère
      * @return boléen qui renvoie true si le type de la valeur et le type du critère correspondent
      *      
     */
-    public boolean isValid() throws WrongCriterionTypeException {
+    public boolean isValid() throws CriterionTypeException {
         char typeActuel = this.infer();
         char typeAttendu = this.label.getType();
         if(typeActuel != typeAttendu)
-            throw new WrongCriterionTypeException(this.value, typeActuel, typeAttendu);
+            throw new CriterionTypeException(this.value, typeActuel, typeAttendu);
         return true;
     }
 
     /**
      * Vérifie l'égalité entre 2 critères
-     * 
      * @param o Un objet
     */
     public boolean equals(Object o) {

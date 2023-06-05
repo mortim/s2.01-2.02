@@ -22,27 +22,27 @@ public class PlatformTest {
     void initialization() {
         this.t1 = new Teenager("Jerome", "A. Rodriquez", LocalDate.of(2005,12,15), Country.FRANCE);
     
-        this.t1.addCriterion("GUEST_ANIMAL_ALLERGY", new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "yes"));
-        this.t1.addCriterion("HOST_HAS_ANIMAL", new Criterion(CriterionName.HOST_HAS_ANIMAL, "&"));
-        this.t1.addCriterion("HOBBIES", new Criterion(CriterionName.HOBBIES, "reading,science"));
+        this.t1.addCriterion(new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "yes"));
+        this.t1.addCriterion(new Criterion(CriterionName.HOST_HAS_ANIMAL, "&"));
+        this.t1.addCriterion(new Criterion(CriterionName.HOBBIES, "reading,science"));
 
         // -------------------
         this.t2 = new Teenager("Patricia", "B. Truitt", LocalDate.of(2005,11,14), Country.ITALY);
 
-        this.t2.addCriterion("GUEST_ANIMAL_ALLERGY", new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "yes"));
-        this.t2.addCriterion("HOST_HAS_ANIMAL", new Criterion(CriterionName.HOST_HAS_ANIMAL, "yes"));
-        this.t2.addCriterion("HOBBIES", new Criterion(CriterionName.HOBBIES, "culture,sports"));
-        this.t2.addCriterion("HOST_FOOD", new Criterion(CriterionName.HOST_FOOD, ""));
-        this.t2.addCriterion("GUEST_FOOD", new Criterion(CriterionName.GUEST_FOOD, "vegetarian"));
+        this.t2.addCriterion(new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "yes"));
+        this.t2.addCriterion(new Criterion(CriterionName.HOST_HAS_ANIMAL, "yes"));
+        this.t2.addCriterion(new Criterion(CriterionName.HOBBIES, "culture,sports"));
+        this.t2.addCriterion(new Criterion(CriterionName.HOST_FOOD, ""));
+        this.t2.addCriterion(new Criterion(CriterionName.GUEST_FOOD, "vegetarian"));
 
         // -------------------
         this.t3 = new Teenager("Ryan", "R. Muller", LocalDate.of(2005,10,13), Country.GERMANY);
     
-        this.t3.addCriterion("GUEST_ANIMAL_ALLERGY", new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "&"));
-        this.t3.addCriterion("HOST_HAS_ANIMAL", new Criterion(CriterionName.HOST_HAS_ANIMAL, ""));
-        this.t3.addCriterion("HOBBIES", new Criterion(CriterionName.HOBBIES, "science"));
-        this.t3.addCriterion("HOST_FOOD", new Criterion(CriterionName.HOST_FOOD, "vegetarian,nonuts"));
-        this.t3.addCriterion("GUEST_FOOD", new Criterion(CriterionName.GUEST_FOOD, "nonuts"));
+        this.t3.addCriterion(new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "&"));
+        this.t3.addCriterion(new Criterion(CriterionName.HOST_HAS_ANIMAL, ""));
+        this.t3.addCriterion(new Criterion(CriterionName.HOBBIES, "science"));
+        this.t3.addCriterion(new Criterion(CriterionName.HOST_FOOD, "vegetarian,nonuts"));
+        this.t3.addCriterion(new Criterion(CriterionName.GUEST_FOOD, "nonuts"));
 
         this.platform = new Platform();
     }
