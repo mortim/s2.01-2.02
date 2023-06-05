@@ -1,9 +1,0 @@
-FORENAME,NAME,COUNTRY,BIRTH_DATE,HOBBIES,GUEST_ANIMAL_ALLERGY,HOST_HAS_ANIMAL,GUEST_FOOD,HOST_FOOD,GENDER,PAIR_GENDER,HISTORY
-Giorgio,Chiellini,ITALY,2005-07-07,science,false,true,vegetarian,,Male,Female,other
-Thomas,Muller,GERMANY,2005-02-02,science,false,false,vegetarian,,Male,Female,same
-Ciro,Immobile,ITALY,2005-03-03,culture,false,false,,nonuts,Male,Female,other
-Remy,Cabella,FRANCE,2005-05-05,reading,false,true,vegetarian,nonuts,Male,Female,same
-Alexandra,Popp,GERMANY,2005-06-06,technology,false,false,nonuts,vegetarian,Female,Male,same
-Ona,Batlle,SPAIN,2005-08-08,culture,true,false,,nonuts,Female,Male,other
-Alexia,Putellas,SPAIN,2005-04-04,reading,false,true,,vegetarian,Female,Male,other
-Kylian,Mbappe,FRANCE,2005-01-01,technology,false,true,nonuts,vegetarian,Male,Female,same

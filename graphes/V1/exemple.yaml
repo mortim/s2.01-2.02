@@ -1,6 +1,6 @@
-name : exemple1
-descr : Modelisation de l'exemple 1
-type : uwgraph 
+name : exemple
+descr : Modelisation de l'exemple
+type : uwgraph
 nodes : [a, b, c, x, y, z]
 wedges :
   a: {x: 40, y: 50, z: 40}
