@@ -1,0 +1,13 @@
+name : exemple2
+descr : Modelisation de l'exemple2
+type : uwgraph 
+nodes : [giorgio, thomas, ciro, manuel, mateo, joshua, marco, antonio]
+wedges :
+  thomas: {giorgio: 60, ciro: 30, mateo: 40, marco: 40}
+  manuel: {giorgio: 40, ciro: 30, mateo: 40, marco: 30}
+  joshua: {giorgio: 40, ciro: 40, mateo: 15, marco: 30}
+  antonio: {giorgio: 30, ciro: 20, mateo: 40, marco: 40}
+  giorgio: {thomas: 60, manuel: 40, joshua: 40, antonio: 30}
+  ciro: {thomas: 30, manuel: 30, joshua: 40, antonio: 20}
+  mateo: {thomas: 40, manuel: 40, joshua: 15, antonio: 40}
+  marco: {thomas: 40, manuel: 30, joshua: 30, antonio: 40}

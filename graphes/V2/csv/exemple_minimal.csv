@@ -1,0 +1,9 @@
+FORENAME;NAME;COUNTRY;BIRTH_DATE;HOBBIES;GUEST_ANIMAL_ALLERGY;HOST_HAS_ANIMAL;GUEST_FOOD;HOST_FOOD;GENDER;PAIR_GENDER;HISTORY
+Giorgio;Chiellini;ITALY;2005-07-07;;;;;;;;other;
+Thomas;Muller;GERMANY;2005-02-02;;;;;;;;;
+Ciro;Immobile;ITALY;2005-03-03;;;;;;;;;
+Manuel;Neuer;GERMANY;2005-05-05;;;;;;;;same;
+Mateo;Retegui;ITALY;2005-06-06;;;;;;;;;
+Joshua;Kimmich;GERMANY;2005-08-08;;;;;;;;same;
+Marco;Verratti;ITALY;2005-04-04;;;;;;;;same;
+Antonio;Rüdiger;GERMANY;2005-01-01;;;;;;;;;
