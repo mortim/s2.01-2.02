@@ -8,7 +8,9 @@ import LinguaMatch.core.Country;
 import LinguaMatch.core.Criterion;
 import LinguaMatch.core.CriterionName;
 import LinguaMatch.core.Teenager;
+import fr.ulille.but.sae2_02.graphes.Arete;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
@@ -18,42 +20,62 @@ import java.time.format.DateTimeParseException;
  * Classe utile pour lire des fichiers CSV respectant quelques contraintes dans le cadre de la SaÉ
  * @author WASSON Baptiste, LAGACHE Kylian, AOULAD-TAYAB Karim
 */
-public class CSVReader {
+public class CSVReader implements Closeable {
     // Flux de lecture
     private Scanner sc;
-    // En commencant par la deuxième ligne
+    // En commençant par la deuxième ligne
     private int pos;
     private String firstLine;
     private int nbCols;
-    // Liste des lignes CSV respectant le format
-    private List<Teenager> parsed;
+    private CSVFileType type;
+    // Liste des lignes CSV respectant le format standard
+    private List<Teenager> standardParsed;
+    // Liste des lignes CSV respectant le format d'un historique d'affectation
+    private List<Arete<Teenager>> historyParsed;
     // Liste des erreurs pour les lignes CSV ne respectant pas le format
     private List<String> errors;
 
     /**
-     * Constructeur qui prend en paramètre le chemin du fichier CSV
+     * Constructeur qui prend en paramètre le chemin du fichier CSV et le type de fichier CSV
      * @param filepath Chemin du fichier CSV
+     * @param type Format CSV (standard ou historique d'affectation)
+     * @see CSVFileType
     */
-    public CSVReader(String filepath) throws FileNotFoundException {
-        try {
-            this.sc = new Scanner(new File(filepath));
-        } catch(FileNotFoundException e) {
-            throw new FileNotFoundException("Le fichier '" + filepath + "' n'existe pas");
-        }
-        this.sc.useDelimiter(";");
+    public CSVReader(String filepath, CSVFileType type) throws FileNotFoundException {
+        this.sc = new Scanner(new File(filepath));
+        this.sc.useDelimiter(CSVUtil.DELIMITER);
         // On skip la première ligne (représentant les colonnes) et on retourne le nombre de colonnes
         this.pos = 2;
         this.firstLine = this.sc.nextLine().replaceAll("\"", "");
-        this.nbCols = this.firstLine.split(";").length;
-        this.parsed = new ArrayList<>();
+        this.nbCols = this.firstLine.split(CSVUtil.DELIMITER).length;
+        this.type = type;
+        this.standardParsed = new ArrayList<>();
+        this.historyParsed = new ArrayList<>();
         this.errors = new ArrayList<>();
     }
 
     /**
-     * Retourne les lignes du CSV parsés correctement sous le type Teenager
+     * Constructeur qui prend en paramètre le chemin du fichier CSV (avec le type de fichier CSV par défaut STANDARD)
+     * @param filepath Chemin du fichier CSV
+    */
+    public CSVReader(String filepath) throws FileNotFoundException {
+        this(filepath, CSVFileType.STANDARD);
+    }
+
+    /**
+     * Retourne les lignes du CSV parsés correctement sous le format STANDARD
+     * @see CSVFileType
     */
     public List<Teenager> getParsed() {
-        return this.parsed;
+        return this.standardParsed;
+    }
+
+    /**
+     * Retourne les lignes du CSV parsés correctement sous le format HISTORY
+     * @see CSVFileType
+    */
+    public List<Arete<Teenager>> getHistoryParsed() {
+        return this.historyParsed;
     }
 
     /**
@@ -62,18 +84,6 @@ public class CSVReader {
     */
     public List<String> getErrors() {
         return this.errors;
-    }
-
-    /**
-     * Retourne le nom de la colonne suivant son indice
-     * @param idx Position de la colonne (en partant de 0)
-    */
-    public String getColumnName(int idx) {
-        if(idx >= 0 && idx < nbCols) {
-            String[] columns = this.firstLine.split(";");
-            return columns[idx];
-        }
-        return null;
     }
 
     /**
@@ -90,21 +100,27 @@ public class CSVReader {
     */
     public void checkCSVStruct(String ligne, String[] valeurs) throws WrongCSVStructureException {
         if(valeurs.length != this.nbCols)
-            throw new WrongCSVStructureException(ligne, pos, "Le nombre de colonnes n'est pas identique");
+            throw new WrongCSVStructureException(ligne, this.pos, "Le nombre de colonnes n'est pas identique.");
 
-        if(valeurs[0].equals("") || valeurs[1].equals(""))
-            throw new WrongCSVStructureException(ligne, pos, "Les champs FORENAME / NAME ne doivent pas être vides.");
-                
-        try {
-            Country.valueOf(valeurs[2]);
-        } catch(IllegalArgumentException e) {
-            throw new WrongCSVStructureException(ligne, pos, "Le champ COUNTRY contient un pays qui n'est pas dans l'enum COUNTRY.");
-        }
+        int k = 0;
+        // Le vérification de la structure est compatible pour les 2 formats (standard, historique)
+        for(int i = 0; i < this.type.getNbTeenagersByLine(); i++) {
+            if(valeurs[0+k].equals("") || valeurs[1+k].equals(""))
+                throw new WrongCSVStructureException(ligne, this.pos, "Les champs FORENAME / NAME ne doivent pas être vides.");
+            
+            try {
+                Country.valueOf(valeurs[2+k]);
+            } catch(IllegalArgumentException e) {
+                throw new WrongCSVStructureException(ligne, this.pos, "Le champ COUNTRY contient un pays qui n'est pas dans l'enum COUNTRY.");
+            }
 
-        try {
-            LocalDate.parse(valeurs[3]);
-        } catch(DateTimeParseException e) {
-            throw new WrongCSVStructureException(ligne, pos, "La date à un format incorrect.");
+            try {
+                LocalDate.parse(valeurs[3+k]);
+            } catch(DateTimeParseException e) {
+                throw new WrongCSVStructureException(ligne, this.pos, "La date à un format incorrect.");
+            }
+
+            k+=12;
         }
     }
 
@@ -114,25 +130,51 @@ public class CSVReader {
     public void load() throws IllegalStateException {
         String ligne;
         String[] valeurs;
+        List<Teenager> teenagers = new ArrayList<>();
+        int nbSemicolons, k;
         Teenager teenager;
     
         try {
             while(this.sc.hasNextLine()) {
                 ligne = sc.nextLine().replaceAll("\"", "");
-                valeurs = ligne.split(";");
+                valeurs = ligne.split(CSVUtil.DELIMITER);
+                nbSemicolons = CSVUtil.countSemicolons(ligne);
+
+                // S'il n'y a pas de ';' à la fin
+                if(nbSemicolons == this.nbCols-1)
+                    nbSemicolons++;
+
+                // S'il n'y a que des colonnes vides jusqu'à la fin split ne les tient pas en compte, il faut les tenir en compte en tant que chaîne de caractères vides
+                // La condition (nbSemicolons == this.nbCols) vérifie que la ligne (avant le split) a le bon nombre de colonnes pour éviter des lignes ayant trop de colonnes ou peu de colonnes rentrent dans la condition et qu'il ne lève pas d'exception dans la méthode this.checkCSVStruct() qui suit...
+                if((valeurs.length != this.nbCols) && (nbSemicolons == this.nbCols))
+                    valeurs = CSVUtil.emptyStrFill(valeurs, nbSemicolons);
+                
                 try {
+                    k = 0;
+
                     this.checkCSVStruct(ligne, valeurs);
-                    
-                    teenager = new Teenager(valeurs[0], valeurs[1], LocalDate.parse(valeurs[3]), Country.valueOf(valeurs[2]));
-    
-                    String criterion;
-                    for(int i = 4; i <= 11; i++) {
-                        criterion = this.getColumnName(i);
-    
-                        teenager.addCriterion(criterion, new Criterion(CriterionName.valueOf(criterion), valeurs[i]));
+
+                    for(int i = 0; i < this.type.getNbTeenagersByLine(); i++) {
+                        teenager = new Teenager(valeurs[0+k], valeurs[1+k], LocalDate.parse(valeurs[3+k]), Country.valueOf(valeurs[2+k]));
+
+                        for(int j = 4+k; j <= 11+k; j++) {
+                            teenager.addCriterion(new Criterion(
+                                        CriterionName.valueOf(CSVUtil.getColumnName(this.firstLine, j, this.nbCols)),
+                                        valeurs[j]));
+                        }
+
+                        teenagers.add(teenager);
+                        
+                        // Passer à l'adolescent suivant (12 cols par ado sur la même ligne)
+                        k+=12;
                     }
-    
-                    this.parsed.add(teenager);
+
+                    if(this.type == CSVFileType.HISTORY)
+                        this.historyParsed.add(new Arete<Teenager>(teenagers.get(0), teenagers.get(1)));
+                    else 
+                        this.standardParsed.add(teenagers.get(0));
+
+                    teenagers.clear();
                 } catch(WrongCSVStructureException e) {
                     this.errors.add(e.getMessage());
                 }
