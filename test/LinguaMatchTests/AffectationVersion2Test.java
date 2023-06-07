@@ -1,4 +1,4 @@
-package test.LinguaMatch;
+package LinguaMatchTests;
 
 import java.io.FileNotFoundException;
 import java.util.List;

@@ -1,0 +1,12 @@
+{
+    "java.project.referencedLibraries": [
+        "/home/karim/Downloads/javafx-sdk-17.0.2/lib/*.jar",
+        "lib/*.jar"
+    ],
+    "java.project.sourcePaths": [
+        "src",
+        "test"
+    ],
+    "java.project.outputPath": "bin",
+    "java.debug.settings.console": "internalConsole"
+}

@@ -1,4 +1,4 @@
-package test.LinguaMatch;
+package LinguaMatchTests;
 
 import java.time.LocalDate;
 import java.util.List;
