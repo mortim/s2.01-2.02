@@ -114,9 +114,8 @@ public class Teenager implements Serializable {
 
     /**
      * Ajoute un critère particulier à la table associative stockant tous les critères de l'adolescent
-     * @param criterionName Nom du critère
      * @param criterion Le critère
-     * @see getRequirements()
+     * @see getRequirements
     */
     public boolean addCriterion(Criterion criterion) {
         try {
@@ -130,20 +129,16 @@ public class Teenager implements Serializable {
     }
 
     /**
-     * Vérifie si un adolescent a des critères incohérents suivant ces 2 types d'incohérences:
+     * Vérifie si un adolescent a des critères incohérents suivant ce cette règle:
      * <ul>
-     *  <li>Un critère censé stocker un booléen mais de valeur effective d'un autre type est incohérent</li>
      *  <li>Un adolescent déclarant une allergie aux animaux (contrainte rédhibitoire) mais déclarant aussi posséder un animal à la maison</li>
      * </ul>
     */
-    public boolean hasInconsistencyCriterions() throws CriterionTypeException {
+    public boolean hasInconsistencyCriterion() throws CriterionTypeException {
         Criterion hostCrit = this.requirements.get("HOST_HAS_ANIMAL");
         Criterion guestCrit = this.requirements.get("GUEST_ANIMAL_ALLERGY");
          
         if(hostCrit != null && guestCrit != null) {
-            hostCrit.isValid();
-            guestCrit.isValid();
-
             if(hostCrit.getValue().equals("yes") && guestCrit.getValue().equals("yes"))
                 throw new CriterionTypeException("Un adolescent ne peut pas être allergène aux animaux et avoir un animal chez lui.");
         }
@@ -250,13 +245,14 @@ public class Teenager implements Serializable {
     }
 
     // Sérialisation binaire personalisée
+    @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         this.id = (int)ois.readObject();
         this.forename = (String)ois.readObject();
         this.name = (String)ois.readObject();
         this.birthDate = (LocalDate)ois.readObject();
         this.country = (Country)ois.readObject();
-        this.requirements = (Map)ois.readObject();
+        this.requirements = (Map<String, Criterion>)ois.readObject();
     }
 
     private void writeObject(ObjectOutputStream oos) throws IOException {

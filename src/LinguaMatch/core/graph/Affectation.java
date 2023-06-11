@@ -95,10 +95,11 @@ public class Affectation implements Serializable {
     }
 
     // Sérialisation binaire personalisée
+    @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
-        this.sommetsGauche = (List)ois.readObject();
-        this.sommetsDroite = (List)ois.readObject();
-        Map<Teenager[], Double> map = (Map)ois.readObject();
+        this.sommetsGauche = (List<Teenager>)ois.readObject();
+        this.sommetsDroite = (List<Teenager>)ois.readObject();
+        Map<Teenager[], Double> map = (Map<Teenager[], Double>)ois.readObject();
 
         // Reconstruction du graphe
         this.grapheBiparti = new GrapheNonOrienteValue<>();
