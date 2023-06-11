@@ -74,7 +74,7 @@ Cet exemple va mettre au défi votre modèle vis à vis de la prise en compte de
 
 > Récupérez sur Moodle le fichier de données `compatibilityVsHobbies.csv`. Expliquez quelle est sa particularité de cet exemple. Écrire la méthode de test qui test qui change cet exemple, construit le graphe modèle, calcule l'affectation, et finalement vérifie qu'aucune paire d'adolescents non compatibles n'a été construite par l'algorithme.
 
-La particularité de cet exemple, est qu'il comporte des lignes avec beaucoup de colonnes, il ne faut pas les prendre en compte car ils ne respectent pas la structure CSV demandé. K'objectif à terme est de pouvoir importer les fichiers CSV et de détecter, conserver les erreurs de lignes CSV pour pouvoir éventueller les signaler et pour les autres lignes, les traiter pour dans la plateforme d'affectation.
+La particularité de cet exemple, c'est qu'on a l'impression qu'il comporte trop de colonnes mais ce n'est pas le même délimiteur (ici c'est ``,``) donc c'est considéré comme une seule et même colonne et le compte est toujours le bon. La structure de ce fichier CSV est correcte.
 
 Version 2
 ---
