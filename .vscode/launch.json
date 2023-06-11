@@ -3,24 +3,17 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Main",
+            "name": "Platform",
             "request": "launch",
-            "mainClass": "LinguaMatch.Main",
+            "mainClass": "LinguaMatch.Platform",
             "projectName": "S2.01-S2.02_87f99300"
         },
         {
             "type": "java",
-            "name": "Main",
+            "name": "Platform",
             "request": "launch",
-            "mainClass": "LinguaMatch.Main",
-            "projectName": "F6_87681c44"
-        },
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "LinguaMatch.Main",
-            "projectName": "s2.01-s2.02_2652db40"
+            "mainClass": "LinguaMatch.Platform",
+            "projectName": "S2.01-S2.02_40ba675b"
         },
         {
             "type": "java",
