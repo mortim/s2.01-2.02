@@ -45,8 +45,9 @@ public class CSVUtil {
     }
 
     /**
-     * Remplit un tableau de valeurs (issu d'une ligne CSV) de chaînes vides dans le cas où la ligne ne comporte que des colonnes vides jusqu'à la fin de la ligne, afin de conserver le  même nombre de colonnes que la première ligne
-     * @param line Ligne CSV
+     * Remplit un tableau de valeurs (issu d'une ligne CSV) de chaînes vides dans le cas où la ligne ne comporte que des colonnes vides jusqu'à la fin de la ligne, afin de conserver le même nombre de colonnes que la première ligne
+     * @param valeurs Ligne CSV decomposé en mots via un tableau
+     * @param nbSemicolons Nombre de points-virgules (délimiteur)
     */
     public static String[] emptyStrFill(String[] valeurs, int nbSemicolons) {
         String[] tmpValeurs = new String[nbSemicolons];

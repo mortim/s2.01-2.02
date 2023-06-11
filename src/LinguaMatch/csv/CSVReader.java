@@ -34,6 +34,8 @@ public class CSVReader implements Closeable {
     private List<Arete<Teenager>> historyParsed;
     // Liste des erreurs pour les lignes CSV ne respectant pas le format
     private List<String> errors;
+    // Liste des pays possibles pour des séjours
+    private List<String> countries;
 
     /**
      * Constructeur qui prend en paramètre le chemin du fichier CSV et le type de fichier CSV
@@ -41,24 +43,31 @@ public class CSVReader implements Closeable {
      * @param type Format CSV (standard ou historique d'affectation)
      * @see CSVFileType
     */
-    public CSVReader(String filepath, CSVFileType type) throws FileNotFoundException {
+    public CSVReader(String filepath, CSVFileType type) throws FileNotFoundException, WrongCSVStructureException {
         this.sc = new Scanner(new File(filepath));
         this.sc.useDelimiter(CSVUtil.DELIMITER);
         // On skip la première ligne (représentant les colonnes) et on retourne le nombre de colonnes
         this.pos = 2;
         this.firstLine = this.sc.nextLine().replaceAll("\"", "");
         this.nbCols = this.firstLine.split(CSVUtil.DELIMITER).length;
+
+        if((type == CSVFileType.HISTORY && this.nbCols != 24))
+            throw new WrongCSVStructureException("Le fichier stockant l'historique d'affectations n'en est pas un");
+        if(type == CSVFileType.STANDARD && this.nbCols != 12)
+            throw new WrongCSVStructureException("Le fichier de configuration ne doit pas être un historique d'affectations");
+
         this.type = type;
         this.standardParsed = new ArrayList<>();
         this.historyParsed = new ArrayList<>();
         this.errors = new ArrayList<>();
+        this.countries = new ArrayList<>();
     }
 
     /**
      * Constructeur qui prend en paramètre le chemin du fichier CSV (avec le type de fichier CSV par défaut STANDARD)
      * @param filepath Chemin du fichier CSV
     */
-    public CSVReader(String filepath) throws FileNotFoundException {
+    public CSVReader(String filepath) throws FileNotFoundException, WrongCSVStructureException {
         this(filepath, CSVFileType.STANDARD);
     }
 
@@ -76,6 +85,13 @@ public class CSVReader implements Closeable {
     */
     public List<Arete<Teenager>> getHistoryParsed() {
         return this.historyParsed;
+    }
+
+    /**
+     * Retourne la liste des pays possibles pour des séjours
+    */
+    public List<String> getCountries() {
+        return this.countries;
     }
 
     /**
@@ -156,6 +172,10 @@ public class CSVReader implements Closeable {
 
                     for(int i = 0; i < this.type.getNbTeenagersByLine(); i++) {
                         teenager = new Teenager(valeurs[0+k], valeurs[1+k], LocalDate.parse(valeurs[3+k]), Country.valueOf(valeurs[2+k]));
+
+                        // Utilisé pour l'interface graphique (JavaFX)
+                        if(!countries.contains(valeurs[2+k]))
+                            countries.add(valeurs[2+k]);
 
                         for(int j = 4+k; j <= 11+k; j++) {
                             teenager.addCriterion(new Criterion(
