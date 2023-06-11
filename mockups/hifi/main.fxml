@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LinguaMatch.gui.controller.MainController">
+   <children>
+      <Label alignment="CENTER" prefHeight="51.0" prefWidth="667.0" text="LinguaMatch">
+         <font>
+            <Font name="Cantarell Extra Bold" size="28.0" />
+         </font>
+      </Label>
+      <HBox maxHeight="1.7976931348623157E308" prefHeight="100.0" prefWidth="600.0">
+         <children>
+            <VBox prefHeight="140.0" prefWidth="281.0">
+               <children>
+                  <Label text="Filtrage des paramètres:" />
+                  <VBox prefHeight="105.0" prefWidth="275.0">
+                     <children>
+                        <Label text="Affinité">
+                           <graphic>
+                              <Spinner fx:id="spinner1" />
+                           </graphic>
+                           <padding>
+                              <Insets bottom="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <Label prefHeight="34.0" prefWidth="288.0" text="Contrainte forte">
+                           <graphic>
+                              <Spinner fx:id="spinner2" />
+                           </graphic>
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </Label>
+                        <Label text="Compatibilité">
+                           <graphic>
+                              <Spinner fx:id="spinner3" />
+                           </graphic>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="118.0" prefWidth="5.0">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Separator>
+            <VBox prefHeight="149.0" prefWidth="356.0">
+               <children>
+                  <Label text="Fichier de configuration (CSV):" />
+                  <HBox prefHeight="15.0" prefWidth="293.0">
+                     <children>
+                        <TextField fx:id="chemin" prefHeight="25.0" prefWidth="240.0" promptText="Remplace le chemin par défaut" />
+                        <Button fx:id="config_btn" mnemonicParsing="false" onAction="#openCSV" prefHeight="25.0" prefWidth="131.0" style="-fx-background-color: lightgreen;" text="Ouvrir un fichier" textFill="#3c3232">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Label text="Historique d'affectations (CSV)">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="historique" prefHeight="25.0" prefWidth="238.0" promptText="Affectations de l'an dernier">
+                           <HBox.margin>
+                              <Insets top="10.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button fx:id="historique_btn" mnemonicParsing="false" onAction="#openCSV" prefHeight="25.0" prefWidth="132.0" style="-fx-background-color: lightgreen;" text="Ouvrir un fichier">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <Button mnemonicParsing="false" onAction="#loadCSV" prefHeight="25.0" prefWidth="374.0" style="-fx-background-color: lightblue;" text="CHARGER">
+                     <VBox.margin>
+                        <Insets left="10.0" right="15.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <Separator prefWidth="200.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </Separator>
+      <HBox prefHeight="204.0" prefWidth="668.0">
+         <children>
+            <VBox prefHeight="204.0" prefWidth="671.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Toutes les paires possibles (hote - visiteur) de pays:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Text>
+                  <ListView fx:id="list" editable="true" prefHeight="163.0" prefWidth="648.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </ListView>
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

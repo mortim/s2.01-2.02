@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LinguaMatch.gui.controller.ListTeenController">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des adolescents par pays:">
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+         <font>
+            <Font name="Cantarell Bold" size="20.0" />
+         </font>
+      </Text>
+      <HBox prefHeight="355.0" prefWidth="600.0">
+         <children>
+            <VBox prefHeight="346.0" prefWidth="369.0">
+               <children>
+                  <Text fx:id="pays1" strokeType="OUTSIDE" strokeWidth="0.0" text="Pays 1 (hôte)">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Text>
+                  <ListView fx:id="list1" prefHeight="326.0" prefWidth="299.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="355.0" prefWidth="372.0">
+               <children>
+                  <Text fx:id="pays2" strokeType="OUTSIDE" strokeWidth="0.0" text="Pays 2 (visiteur)">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Text>
+                  <ListView fx:id="list2" prefHeight="319.0" prefWidth="309.0" />
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>
