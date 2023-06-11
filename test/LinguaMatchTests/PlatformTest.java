@@ -5,21 +5,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDate;
+
+import LinguaMatch.Platform;
 import LinguaMatch.core.Country;
 import LinguaMatch.core.Criterion;
 import LinguaMatch.core.CriterionName;
-import LinguaMatch.core.Platform;
 import LinguaMatch.core.Teenager;
 
 public class PlatformTest {
     Teenager t1, t2, t3;
-    Map<String,Criterion> h1, h2, h3;
-    Platform platform;
 
     @BeforeEach
     void initialization() {
+        List<Teenager> l = new ArrayList<>();
+
         this.t1 = new Teenager("Jerome", "A. Rodriquez", LocalDate.of(2005,12,15), Country.FRANCE);
     
         this.t1.addCriterion(new Criterion(CriterionName.GUEST_ANIMAL_ALLERGY, "yes"));
@@ -44,41 +46,36 @@ public class PlatformTest {
         this.t3.addCriterion(new Criterion(CriterionName.HOST_FOOD, "vegetarian,nonuts"));
         this.t3.addCriterion(new Criterion(CriterionName.GUEST_FOOD, "nonuts"));
 
-        this.platform = new Platform();
-    }
+        l.add(t1);
+        l.add(t2);
+        l.add(t3);
 
-    @Test
-    void testAddTeenager() {
-        assertEquals(0, this.platform.getTeenagers().size());
-        this.platform.addTeenager(t1);
-        this.platform.addTeenager(t2);
-        this.platform.addTeenager(t3);
-        assertEquals(3, this.platform.getTeenagers().size());
+        Platform.teenagers = l;
     }
 
     @Test
     void testFilterTeenagers() {
-        this.platform.filterTeenagers();
-        assertEquals(0, this.platform.getTeenagers().size());
+        Platform.filterTeenagers();
+        assertEquals(2, Platform.teenagers.size());
     }
 
     @Test
     void testPurgeInvalidRequirement() {
-        this.platform.addTeenager(t1);
-        this.platform.addTeenager(t2);
-        this.platform.addTeenager(t3);
+        Platform.teenagers.add(t1);
+        Platform.teenagers.add(t2);
+        Platform.teenagers.add(t3);
 
-        assertEquals(3, this.platform.getTeenagers().get(0).getRequirements().size());
-        assertEquals(5, this.platform.getTeenagers().get(1).getRequirements().size());
-        assertEquals(5, this.platform.getTeenagers().get(2).getRequirements().size());
+        assertEquals(3, Platform.teenagers.get(0).getRequirements().size());
+        assertEquals(5, Platform.teenagers.get(1).getRequirements().size());
+        assertEquals(5, Platform.teenagers.get(2).getRequirements().size());
 
-        this.platform.purgeInvalidRequirement();
+        Platform.purgeInvalidRequirement();
 
         // Incohérence de type sur le critère HOST_HAS_ANIMAL
-        assertEquals(2, this.platform.getTeenagers().get(0).getRequirements().size());
+        assertEquals(2, Platform.teenagers.get(0).getRequirements().size());
         // Aucune incohérence de type
-        assertEquals(5, this.platform.getTeenagers().get(1).getRequirements().size());
+        assertEquals(5, Platform.teenagers.get(1).getRequirements().size());
         // Incohérence de type sur les critères GUEST_ANIMAL_ALLERGY et HOST_HAS_ANIMAL
-        assertEquals(3, this.platform.getTeenagers().get(2).getRequirements().size());
+        assertEquals(3, Platform.teenagers.get(2).getRequirements().size());
     }
 }

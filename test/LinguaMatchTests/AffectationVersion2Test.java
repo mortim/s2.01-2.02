@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import LinguaMatch.core.graph.AffectationUtil;
-import LinguaMatch.core.Country;
-import LinguaMatch.core.graph.SubsetGraph;
 import LinguaMatch.csv.CSVFileType;
 import LinguaMatch.csv.CSVReader;
 import LinguaMatch.csv.CSVUtil;
+import LinguaMatch.csv.WrongCSVStructureException;
+import LinguaMatch.core.Country;
 import LinguaMatch.core.Teenager;
 import LinguaMatch.core.graph.Affectation;
 import fr.ulille.but.sae2_02.graphes.Arete;
@@ -32,39 +32,18 @@ public class AffectationVersion2Test {
         }
         return null;
     }
-
-    private static void ajouterAdolescents(Affectation a, List<Teenager> t) {
-        for(Teenager t1 : t) {
-            if(t1.getCountry() == Country.GERMANY)
-                a.ajouterAdolescent(t1, SubsetGraph.GAUCHE);
-            else
-                a.ajouterAdolescent(t1, SubsetGraph.DROITE);
-        }
-    }
-
-    private static void ajouterAretesAdolescents(Affectation a, List<Teenager> t, List<Arete<Teenager>> historiqueAffectation) {
-        for(Teenager t1 : t) {
-            if(t1.getCountry() == Country.GERMANY) {
-                for(Teenager t2 : t) {
-                    if(t2.getCountry() == Country.ITALY) {
-                        a.ajouterCoupleHoteVisiteur(t1, t2, AffectationUtil.weight(t1, t2, historiqueAffectation));
-                    }
-                }
-            }
-        }
-    }
-
+  
     @BeforeEach
     void initialization() {
         try {
             // Lecture du fichier CSV de l'historique d'affectation
-            CSVReader csv = new CSVReader(CSVUtil.getRightAbsolutePath("graphes/V2/csv/exemple_minimal_historique_affectation.csv"), CSVFileType.HISTORY);
+            CSVReader csv = new CSVReader("graphes/V2/csv/exemple_minimal_historique_affectation.csv", CSVFileType.HISTORY);
             csv.load();
             this.historiqueAffectation = csv.getHistoryParsed();
             csv.close();
 
             // Lecture du fichier CSV de l'exemple minimal (exemple 1)
-            csv = new CSVReader(CSVUtil.getRightAbsolutePath("graphes/V2/csv/exemple_minimal.csv"));
+            csv = new CSVReader("graphes/V2/csv/exemple_minimal.csv");
             csv.load();
             this.teenagers = csv.getParsed();
             csv.close();
@@ -77,14 +56,14 @@ public class AffectationVersion2Test {
 
             // Création du graphe biparti de l'exemple minimal (exemple 1)
             this.affectation = new Affectation();
-            AffectationVersion2Test.ajouterAdolescents(this.affectation, this.teenagers);
-            AffectationVersion2Test.ajouterAretesAdolescents(this.affectation, this.teenagers, this.historiqueAffectation);
+            AffectationUtil.ajouterAdolescents(this.affectation, this.teenagers, Country.GERMANY, Country.ITALY);
+            AffectationUtil.ajouterAretesAdolescents(this.affectation, this.teenagers, this.historiqueAffectation, Country.GERMANY, Country.ITALY);
 
             // Création du graphe biparti de l'exemple 2
             this.affectation2 = new Affectation();
-            AffectationVersion2Test.ajouterAdolescents(this.affectation2, this.teenagers2);
-            AffectationVersion2Test.ajouterAretesAdolescents(this.affectation2, this.teenagers2, this.historiqueAffectation);
-        } catch(FileNotFoundException | IllegalStateException e) {
+            AffectationUtil.ajouterAdolescents(this.affectation2, this.teenagers2, Country.GERMANY, Country.ITALY);
+            AffectationUtil.ajouterAretesAdolescents(this.affectation2, this.teenagers2, this.historiqueAffectation, Country.GERMANY, Country.ITALY);
+        } catch(FileNotFoundException | IllegalStateException | WrongCSVStructureException e) {
             System.out.println(e.getMessage());
         }
     }

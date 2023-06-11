@@ -1,11 +1,12 @@
 package LinguaMatch.core.graph;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import LinguaMatch.core.Teenager;
 import fr.ulille.but.sae2_02.graphes.Arete;
+import LinguaMatch.core.Country;
 import LinguaMatch.core.Criterion;
 
 /**
@@ -54,11 +55,11 @@ public class AffectationUtil {
     /** 
     * Calcule le total de bonus/malus pour la contrainte "HISTORY" plus spécifique car basé sur un historique d'affectations
     * @param host L'adolescent hôte
-    * @param guest L'adolescent visiteur
+    * @param visitor L'adolescent visiteur
     * @param historiqueAffectations L'historique d'affectations
     * @param type Le type de critère (les contraintes différent selon si c'est une contrainte rédhibitoire, forte ou une préférence, affinité)
-    * @see AffectationUtil.CONSTRAINT_TYPE
-    * @see AffectationUtil.PREFERENCE_TYPE
+    * @see CONSTRAINT_TYPE
+    * @see PREFERENCE_TYPE
     */
     public static int calculateHistoryCriterion(Teenager host, Teenager visitor, List<Arete<Teenager>> historiqueAffectations, int type) {
         int weight = 0;
@@ -92,6 +93,23 @@ public class AffectationUtil {
         return weight;
     }
 
+    /**
+     * Retourne toutes les paires possibles de pays (hôte-visiteur)
+     * @param countries Tous les pays (distincts) présents dans la liste
+    */
+    public static List<String> getAllCountriesPeers(List<String> countries) {
+        List<String> peers = new ArrayList<>();
+
+        for(String country1 : countries) {
+            for(String country2 : countries) {
+                if(!country1.equals(country2))
+                    peers.add(country1 + " - " + country2);
+            }
+        }
+
+        return peers;
+    }
+
     // Inverser les bonus en malus et les malus en bonus pour la méthode weightAdvanced
     private static void changeBonusToMalus() {
         AffectationUtil.AFFINITY_BONUS = -AffectationUtil.AFFINITY_BONUS;
@@ -121,6 +139,40 @@ public class AffectationUtil {
         weight = AffectationUtil.weight(host, visitor, historiqueAffectations);
         AffectationUtil.changeBonusToMalus();
         return weight;
+    }
+
+    /**
+     * Ajoute tous les ados selon s'il est hôte ou visiteur
+     * @param a L'affectation
+     * @param t La liste des adolescents
+     * @param countries Les 2 pays (hôte, visiteur)
+    */
+    public static void ajouterAdolescents(Affectation a, List<Teenager> t, Country... countries) {
+        for(Teenager t1 : t) {
+            if(t1.getCountry() == countries[0])
+                a.ajouterAdolescent(t1, SubsetGraph.GAUCHE);
+            else
+                a.ajouterAdolescent(t1, SubsetGraph.DROITE);
+        }
+    }
+
+    /**
+     * Ajoute une arête pour un ado du membre de gauche sur tous les adolescents du membre de droite
+     * @param a L'affectation
+     * @param t La liste des adolescents
+     * @param historiqueAffectation L'historique d'affectations
+     * @param countries Les 2 pays (hôte, visiteur)
+    */
+    public static void ajouterAretesAdolescents(Affectation a, List<Teenager> t, List<Arete<Teenager>> historiqueAffectation, Country... countries) {
+        for(Teenager t1 : t) {
+            if(t1.getCountry() == countries[0]) {
+                for(Teenager t2 : t) {
+                    if(t2.getCountry() == countries[1]) {
+                        a.ajouterCoupleHoteVisiteur(t1, t2, AffectationUtil.weight(t1, t2, historiqueAffectation));
+                    }
+                }
+            }
+        }
     }
 
     /** Calcule le poids de l’arête entre host et visitor dans le graphe modèle
