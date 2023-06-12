@@ -1,8 +1,6 @@
 package LinguaMatch.csv;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Boîte à outils pour les manipulations des fichiers CSV (CSVReader, CSVWriter)
@@ -82,17 +80,5 @@ public class CSVUtil {
                 out += CSVUtil.DELIMITER;
         }
         return out;
-    }
-
-    /**
-     * Retourne le chemin absolu "correct" (le lancement des tests avec l'extension Java sous VSCode compile dans un répertoire précis, il faut donc vérifier si lance les tests avec l'extension ou non)
-     * @param filepath Chemin vers un fichier (comme un fichier CSV)
-    */
-    public static String getRightAbsolutePath(String filepath) {
-        String absolutePath = System.getProperty("user.dir");
-        List<String> words = Arrays.asList(absolutePath.split("" + File.separatorChar));
-        if(words.contains("Code") && words.contains("User"))
-            return absolutePath + "/bin/" + filepath; 
-         return absolutePath + "/" + filepath;
     }
 }

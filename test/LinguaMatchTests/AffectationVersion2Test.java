@@ -2,6 +2,7 @@ package LinguaMatchTests;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.io.File;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import LinguaMatch.core.graph.AffectationUtil;
 import LinguaMatch.csv.CSVFileType;
 import LinguaMatch.csv.CSVReader;
-import LinguaMatch.csv.CSVUtil;
 import LinguaMatch.csv.WrongCSVStructureException;
 import LinguaMatch.core.Country;
 import LinguaMatch.core.Teenager;
@@ -37,19 +37,19 @@ public class AffectationVersion2Test {
     void initialization() {
         try {
             // Lecture du fichier CSV de l'historique d'affectation
-            CSVReader csv = new CSVReader("graphes/V2/csv/exemple_minimal_historique_affectation.csv", CSVFileType.HISTORY);
+            CSVReader csv = new CSVReader("graphes" + File.separator + "V2" + File.separator + "csv" + File.separator + "exemple_minimal_historique_affectation.csv", CSVFileType.HISTORY);
             csv.load();
             this.historiqueAffectation = csv.getHistoryParsed();
             csv.close();
 
             // Lecture du fichier CSV de l'exemple minimal (exemple 1)
-            csv = new CSVReader("graphes/V2/csv/exemple_minimal.csv");
+            csv = new CSVReader("graphes" + File.separator + "V2" + File.separator + "csv" + File.separator + "exemple_minimal.csv");
             csv.load();
             this.teenagers = csv.getParsed();
             csv.close();
 
             // Lecture du fichier CSV de l'exemple 2
-            csv = new CSVReader(CSVUtil.getRightAbsolutePath("graphes/V2/csv/exemple2.csv"));
+            csv = new CSVReader("graphes" + File.separator + "V2" + File.separator + "csv" + File.separator + "exemple2.csv");
             csv.load();
             this.teenagers2 = csv.getParsed();
             csv.close();
