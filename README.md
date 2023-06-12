@@ -4,7 +4,7 @@ par **WASSON Baptiste, LAGACHE Kylian, AOULAD-TAYAB Karim**
 
 LinguaMatch est une application (avec et sans interface graphique) permettant d'automatiser le processus d'appariement entre adolescents hôtes/visiteur dans le cadre de séjours linguistiques...
 
-![Exemple](example.png)
+![Exemple](captures/image/example.png)
 
 **Avec LinguaMatch vous pourrez :**
 - Importer un fichier CSV avec un format bien précis contentant les informations et les critères des adolescents et gérer les éventuelles incohérences (type, valeur)
@@ -16,7 +16,7 @@ LinguaMatch est une application (avec et sans interface graphique) permettant d'
 **Liens vers tous les rapports:**
 - [Rapport POO](#)
 - [Rapport Graphes](graphes/rapport.md)
-- [Rapport IHM](#)
+- [Rapport IHM](Rapport-IHM.md)
 
 ### Releases
 
