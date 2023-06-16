@@ -4,8 +4,25 @@ par **WASSON Baptiste, LAGACHE Kylian, AOULAD-TAYAB Karim**
 
 LinguaMatch est une application (avec et sans interface graphique) permettant d'automatiser le processus d'appariement entre adolescents hôtes/visiteur dans le cadre de séjours linguistiques...
 
-![Exemple](captures/image/example.png)
 
+<table>
+  <thead>
+    <tr>
+      <th>Aperçu de l'interface graphique</th>
+      <th>Vidéo de présentation de l'interface graphique</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+      <tr>
+        <td><img src="captures/image/example.png" width="550" /></td>
+        <td>
+          <video src="https://github.com/mortim/s2.01-2.02/assets/33499834/17dd0024-67fd-434e-8ab2-124ac60ff8cb">
+        </td>
+      <tr>
+  </tbody>
+</table>
+              
 **Avec LinguaMatch vous pourrez :**
 - Importer un fichier CSV avec un format bien précis contentant les informations et les critères des adolescents et gérer les éventuelles incohérences (type, valeur)
 - Trouver une solution sur les meilleurs appariements possibles pour tous les adolescents (si possible) via un algorithme d'affectation
