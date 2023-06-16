@@ -47,19 +47,7 @@ Pré-requis:
 
 > Le SDK JavaFX n'est pas compatible pour tous les OS, il y a un SDK par plateforme donc il faut télécharger un SDK (de version 17 avec la bonne architecture et le bon OS)
 
-Ces fichiers JAR dépendent d'autres fichiers JAR, il faut donc (suivant le [MANIFEST](META-INF/MANIFEST.MF)) le lancer depuis la racine du projet.
-
-**Version console** : Cette version montre un rapide aperçu du fonctionnement du logiciel et ne fait que le strict minimum (importation / exportation CSV ou sérialisation et calcul d'affectation)
-
-```
-java -jar linguamatch-console.jar
-```
-
-**Version graphique** : Cette version est la plus complète et fournit une interface graphique plus conviviale pour l'utilisateur
-
-```
-java --module-path [CHEMIN_ABSOLU_VERS_LE_DOSSIER_LIB_DE_JAVAFX] --add-modules javafx.controls,javafx.fxml -jar linguamatch-gui.jar
-```
+Ces fichiers JAR dépendent d'autres fichiers JAR, il faut donc (suivant le [MANIFEST](META-INF/MANIFEST.MF)) le lancer depuis la racine du projet. Veuillez consulter la page des releases juste [ici](https://github.com/mortim/s2.01-2.02/releases/tag/v2-ihm) pour télécharger le/les fichier(s) JAR.
 
 ### Configurer le projet
 
