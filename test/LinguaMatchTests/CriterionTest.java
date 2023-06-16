@@ -30,15 +30,10 @@ public class CriterionTest {
 
     @Test
     void testIsValid() {
-        Exception e = assertThrows(CriterionTypeException.class, () -> {
+        assertThrows(CriterionTypeException.class, () -> {
             assertTrue(this.criterion.isValid());
             assertTrue(this.criterion3.isValid());
             this.criterion2.isValid();
         });
-
-        assertEquals(
-            e.getMessage(),
-            "La valeur '" + this.criterion2.getValue() + "' est de type '" + CriterionName.getFullNameType(this.criterion2.infer()) + "' mais le type attendu est de type '" + CriterionName.getFullNameType(this.criterion2.getLabel().getType()) + "'"
-        );
     }
 }

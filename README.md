@@ -14,7 +14,7 @@ LinguaMatch est une application (avec et sans interface graphique) permettant d'
 - Des logs basiques rapportant les erreurs dans la console (pour l'interface graphique) lors de l'importation d'un fichier CSV
 
 **Liens vers tous les rapports:**
-- [Rapport POO](#)
+- [Rapport POO](Rapport-POO.md)
 - [Rapport Graphes](graphes/rapport.md)
 - [Rapport IHM](Rapport-IHM.md)
 
@@ -22,16 +22,15 @@ LinguaMatch est une application (avec et sans interface graphique) permettant d'
 
 Pré-requis:
 
-> On peut avoir une version supérieure à 17 par rapport à la version des fichiers compilés dans le JAR de ``linguamatch-gui.jar`` pour bénéficier de la rétro-compatibilité, mais pas en dessous de 17 (``linguamatch-console.jar`` est compilé à la version 11 de Java, donc pour faire fonctionner ces 2 fichiers JAR veuillez installer une version de Java égale 17 au minimum)
-
 - Java (>= 17)
 
-> Le SDK JavaFX n'est pas compatible pour tous les OS, il y a un SDK par plateforme donc il faut télécharger un SDK (de version 17 avec la bonne architecture et le bon OS)
+> On peut avoir une version supérieure à 17 par rapport à la version des fichiers compilés dans le JAR de ``linguamatch-gui.jar`` pour bénéficier de la rétro-compatibilité, mais pas en dessous de 17 (``linguamatch-console.jar`` est compilé à la version 11 de Java, donc pour faire fonctionner ces 2 fichiers JAR veuillez installer une version de Java égale à 17 au minimum)
 
 - JavaFX SDK (= 17) [ [lien de téléchargement](https://gluonhq.com/products/javafx/) ]
 
+> Le SDK JavaFX n'est pas compatible pour tous les OS, il y a un SDK par plateforme donc il faut télécharger un SDK (de version 17 avec la bonne architecture et le bon OS)
 
-> Ces fichiers JAR dépendent d'autres fichiers JAR, il faut donc (suivant le [MANIFEST](META-INF/MANIFEST.MF)) le lancer depuis la racine du projet
+Ces fichiers JAR dépendent d'autres fichiers JAR, il faut donc (suivant le [MANIFEST](META-INF/MANIFEST.MF)) le lancer depuis la racine du projet.
 
 **Version console** : Cette version montre un rapide aperçu du fonctionnement du logiciel et ne fait que le strict minimum (importation / exportation CSV ou sérialisation et calcul d'affectation)
 
@@ -90,7 +89,7 @@ Pour générer la documentation Javadoc en local
 > Le fichier 'package-info.java' présent dans l'arborescence sert à documenter chaque package du projet
 
 ```
-javadoc -author -d doc -cp lib/sae2_02.jar:lib/jgrapht-core-1.5.1.jar --module-path [CHEMIN_ABSOLU_VERS_LE_DOSSIER_LIB_DE_JAVAFX] --add-modules javafx.controls,javafx.fxml -sourcepath src -subpackages LinguaMatch
+javadoc -author -d doc -cp lib/sae2_02.jar:lib/jgrapht-core-1.5.1.jar --module-path [CHEMIN_ABSOLU_VERS_LE_DOSSIER_LIB_DE_JAVAFX] --add-modules javafx.controls,javafx.fxml -sourcepath src -docletpath lib/umldoclet-2.1.0.jar -doclet nl.talsmasoftware.umldoclet.UMLDoclet -subpackages LinguaMatch
 ```
 
 La page principale se trouve dans ``doc/LinguaMatch/package-summary.html``
